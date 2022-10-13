@@ -2,18 +2,27 @@ import random
 from message import Message
 
 class FloodingNode:
-    def __init__(self, node_id, hop_limit=4):
+    def __init__(self, node_id, network_size, hop_limit=4):
         self.node_id = node_id 
         self.connections = [] 
         self.messages = [] 
+        self.network_size = network_size
+        self.hop_limit = hop_limit
+
+        # Statistic
         self.sent_messages = 0
         self.recived_messages = 0
         self.dropped_messages = 0
-        self.hop_limit = hop_limit
 
-    def create_message(self):
+    def create_message(self, dest=-1):
         src = self.node_id 
-        dest = random.choice(self.connections).node_id 
+
+        # Om en destination inte har angets, slumpa ett nod ID
+        if dest == -1:
+            dest = random.randint(0, self.network_size-1)
+            while dest == self.node_id:
+                dest = random.randint(0, self.network_size-1)
+        
         new_msg = Message(src, dest)
         self.messages.append(new_msg)
 
@@ -41,7 +50,6 @@ class FloodingNode:
                 self.messages.remove(msg)
                 self.recived_messages += 1
 
-                self.create_message()
 
         self.broadcast()
 

@@ -4,10 +4,12 @@ from generate_network import generate_network
 
 def run_sim(nodes, end):
     timer = 0
-    while timer < end:
+    while timer < end: 
         for node in nodes:
             if len(node.messages) != 0: timer += 0.1
             node.handle_message()
+        if not any([len(n.messages) != 0 for n in nodes]):
+            break
 
 def statistics(nodes):
     sent = 0
@@ -22,13 +24,13 @@ def statistics(nodes):
 smart_nodes = generate_network("network.json", SmartBroadcastNode)
 dumb_nodes = generate_network("network.json", FloodingNode)
 
-smart_nodes[0].create_message()
-dumb_nodes[0].create_message()
+smart_nodes[0].create_message(2)
+dumb_nodes[0].create_message(2)
 
-timer = 1 
-run_sim(smart_nodes, timer)
+end = 1 
+run_sim(smart_nodes, end)
 input()
-run_sim(dumb_nodes, timer)
+run_sim(dumb_nodes, end)
 
 statistics(smart_nodes)
 statistics(dumb_nodes)

@@ -3,8 +3,8 @@ from message import Message
 from flooding_node import FloodingNode
 
 class SmartBroadcastNode(FloodingNode):
-    def __init__(self, node_id, hop_limit=4):
-        FloodingNode.__init__(self, node_id)
+    def __init__(self, node_id, network_size, hop_limit=4):
+        FloodingNode.__init__(self, node_id, network_size)
         self.memory_size = 100
         self.seen_messages = [-1] * self.memory_size
 
@@ -24,8 +24,6 @@ class SmartBroadcastNode(FloodingNode):
                     self.recived_messages += 1
                     self.messages.remove(msg)
 
-                    print("Creating new message")
-                    self.create_message()
             else:
                 print(f"Node_{self.node_id} has already processed message with ID:{msg.msg_id}. Deleting")
                 self.messages.remove(msg)
