@@ -44,14 +44,14 @@ class FloodingNode:
             if msg.hopcount > self.hop_limit:
                 self.dropped_messages += 1
                 self.messages.remove(msg)
+                print("TTL exceeded")
                 continue
             if msg.dest == self.node_id:
                 print(f"Node {self.node_id} recived a message with ID {msg.msg_id} from {msg.src} which was recived after {msg.hopcount} hops.")
                 self.messages.remove(msg)
                 self.recived_messages += 1
-
-
-        self.broadcast()
+            else:
+                self.broadcast()
 
 
 
