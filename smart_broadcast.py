@@ -11,24 +11,16 @@ class SmartBroadcastNode(FloodingNode):
 
     def handle_message(self):
         for msg in self.messages:
-            if msg.hopcount > self.hop_limit:
-                self.dropped_messages += 1
-                self.messages.remove(msg)
-                print("TTL exceeded")
-                continue
 
             has_seen = self.seen_messages[msg.msg_id % self.memory_size] == msg.msg_id
             if not has_seen:
                 self.seen_messages[msg.msg_id % self.memory_size] = msg.msg_id
                 if msg.dest == self.node_id:
-                    print(f"Node {self.node_id} recived a message with ID {msg.msg_id} from {msg.src} which was recived after {msg.hopcount} hops ::: {msg}.")
+                    print(f"Node {self.node_id} recived a message with ID {msg.msg_id} from {msg.src} which was recived after {msg.hopcount} hops.")
                     self.recived_messages += 1
                     self.messages.remove(msg)
-                else:
-                    self.broadcast()
-
             else:
                 print(f"Node_{self.node_id} has already processed message with ID:{msg.msg_id}. Deleting")
                 self.messages.remove(msg)
-
+        self.broadcast()
 
